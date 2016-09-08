@@ -5,6 +5,7 @@ const ServerApp     = require("./conf/conf.app");
 const VirtualHosts  = Host.VirtualHosts;
 const listen        = Host.listen;
 
+console.log("##########################################");
 console.log("VirtualHosts: " + VirtualHosts.length);
 console.log("Listen: " + listen);
 
@@ -15,4 +16,4 @@ for(let i = 0; i < VirtualHosts.length; i++){
 }
 
 App.listen(listen);
-
+console.log("##########################################");

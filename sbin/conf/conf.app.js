@@ -7,6 +7,9 @@ const KOACompress      = require("koa-compress");
 const Path             = require('path');
 const ZLib             = require('zlib');
 
+const DEFAULT_LISTEN_PORT = 3000;
+const DEFAULT_VIRTUAL_HOST = "default";
+
 class ServerApp{
     constructor(){
         var koa = this.koa = KOA();
@@ -41,8 +44,8 @@ class ServerApp{
         let VirtualHost = this.vhost(vhost.ServerAlias);
 
         if(!VirtualHost){
-            VirtualHost = this.vhost("default");
-            console.log("    Try to use default host.");
+            VirtualHost = this.vhost(DEFAULT_VIRTUAL_HOST);
+            console.log("    Try to use \"" + DEFAULT_VIRTUAL_HOST + "\" host.");
         }
 
         if(!VirtualHost){
@@ -56,11 +59,10 @@ class ServerApp{
             this.koa.use(KOAVHost(vhost.ServerAlias, vsa.server));
         }
         console.log("}");
-        console.log("******************************************");
     }
 
     listen(listen){
-        let _listen = listen || 3000;
+        let _listen = listen || DEFAULT_LISTEN_PORT;
 
         if(Array.isArray(_listen)){
             listen.map(function(currentValue, index, _array){
@@ -69,6 +71,13 @@ class ServerApp{
                 });
             }, this.koa);
         }else{
+            _listen = Number(_listen);
+
+            if(isNaN(_listen)){
+                _listen = DEFAULT_LISTEN_PORT;
+                console.log("\"listen\" not a numeric, use the default listen => " + DEFAULT_LISTEN_PORT);
+            }
+
             this.koa.listen(_listen, function(){
                 console.log("server listen on port: " + listen);
             });
