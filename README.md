@@ -1,4 +1,4 @@
-# se.nodeserver
+# SE.NodeServer
 基于NodeJS和KOA搭建的Web应用框架 
 
 # 目录结构
