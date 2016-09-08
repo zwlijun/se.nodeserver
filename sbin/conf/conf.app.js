@@ -7,9 +7,14 @@ const KOACompress      = require("koa-compress");
 const Path             = require('path');
 const ZLib             = require('zlib');
 
+// 默认端口
 const DEFAULT_LISTEN_PORT = 3000;
+// 默认虚拟主机配置
 const DEFAULT_VIRTUAL_HOST = "default";
 
+/**
+ * 服务应用
+ */
 class ServerApp{
     constructor(){
         var koa = this.koa = KOA();
