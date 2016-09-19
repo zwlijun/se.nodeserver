@@ -41,6 +41,14 @@
                 ServerAlias: String
                 // 站点根目录，如：/data/wwwroot
                 DocumentRoot: String
+                // Node应用业务模块
+                NodeModules: {
+                    // 业务模块部署根目录
+                    root: String
+                    // 业务模块别名，用于软链 
+                    // ln -s ${NodeModules.root} ${NODE_SERVER_ROOT}/app/${NodeModules.alias}
+                    alias: String
+                }
                 // 模板引擎，如：ejs
                 TemplateEngine: String
                 // 服务日志，未实现
