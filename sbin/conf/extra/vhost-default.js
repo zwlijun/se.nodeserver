@@ -11,7 +11,7 @@ const KOAViews         = require("koa-views");
 
 const Path             = require('path');
 const ZLib             = require('zlib');
-const spawn            = require('child_process').spawn;
+const spawn            = require('child_process').spawnSync;
 
 class VirtualHost{
     constructor(vhostConf, ServerKOA, AppContext){
@@ -23,6 +23,24 @@ class VirtualHost{
 
     get server(){
         return this.virtualKOA;
+    }
+
+    dir(path){
+        if(path.endsWith("/")){
+            return path;
+        }
+
+        return path + "/";
+    }
+
+    loadLogicModules(path){
+        try{
+            require(path);
+            console.log("    Load `NODE-INF` success. module = " + path);
+        }catch(e){
+            console.log("    Load `NODE-INF` failed. message = " + e.message);
+            // this.loadLogicModules(path);
+        }
     }
 
     load(){
@@ -42,10 +60,9 @@ class VirtualHost{
             gzip: staticServer.gzip || true
         }));
 
-        //挂载业务的Node模块
-        spawn("mkdir", ["-p", context.app]);
-        spawn("rm", ["-rf", context.app + "/" + nms.alias]);
-        spawn("ln", ["-s", nms.root, context.app + "/" + nms.alias]);
+        //装载业务的Node模块
+        spawn("rm", ["-rf", this.dir(context.nms) + nms.alias]);
+        spawn("ln", ["-s", nms.root, this.dir(context.nms) + nms.alias]);
 
         //设置压缩
         vkoa.use(KOACompress({
@@ -59,6 +76,9 @@ class VirtualHost{
                 html: vhost.TemplateEngine
             }
         });
+
+        //初始化业务Node模块脚本
+        this.loadLogicModules(nms.alias);
 
         //设置路由
         // let Router = KOARouter();

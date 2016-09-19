@@ -43,7 +43,7 @@
                 DocumentRoot: String
                 // Node应用业务模块
                 NodeModules: {
-                    // 业务模块部署根目录
+                    // 业务模块部署根目录，如：/data/wwwroot/NODE-INF
                     root: String
                     // 业务模块别名，用于软链 
                     // ln -s ${NodeModules.root} ${NODE_SERVER_ROOT}/app/${NodeModules.alias}

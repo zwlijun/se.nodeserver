@@ -11,7 +11,7 @@ let serverRoot = dirname.substring(0, dirname.indexOf("/sbin"));
 let AppContext = {
 	root: serverRoot,
 	sbin: dirname,
-	app: serverRoot + "/app"
+	nms: serverRoot + "/node_modules"
 };
 
 console.log("##########################################");
