@@ -1,5 +1,5 @@
 # SE.NodeServer
-基于NodeJS(v6.x)和KOA(1.x)搭建的Web应用框架 
+基于NodeJS(6.x)和KOA(1.x)搭建的Web应用框架 
 
 # 目录结构
 + nodeserver
