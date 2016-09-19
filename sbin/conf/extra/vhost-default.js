@@ -11,11 +11,13 @@ const KOAViews         = require("koa-views");
 
 const Path             = require('path');
 const ZLib             = require('zlib');
+const spawn            = require('child_process').spawn;
 
 class VirtualHost{
-    constructor(vhostConf, ServerKOA){
+    constructor(vhostConf, ServerKOA, AppContext){
         this.vhost = vhostConf;
         this.serverKOA = ServerKOA;
+        this.AppContext = AppContext;
         this.virtualKOA = KOA();
     }
 
@@ -24,9 +26,11 @@ class VirtualHost{
     }
 
     load(){
+        let context = this.AppContext;
         let vkoa = this.virtualKOA;
         let vhost = this.vhost;
         let staticServer = vhost.StaticServer || {};
+        let nms = vhost.NodeModules;
 
         let docRoot = Path.resolve(vhost.DocumentRoot);
         //设置静态文件
@@ -37,6 +41,11 @@ class VirtualHost{
             defer: staticServer.defer || false,
             gzip: staticServer.gzip || true
         }));
+
+        //挂载业务的Node模块
+        spawn("mkdir", ["-p", context.app]);
+        spawn("rm", ["-rf", context.app + "/" + nms.alias]);
+        spawn("ln", ["-s", nms.root, context.app + "/" + nms.alias]);
 
         //设置压缩
         vkoa.use(KOACompress({

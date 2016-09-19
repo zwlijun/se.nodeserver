@@ -19,6 +19,14 @@
                 ServerAlias: String
                 // 站点根目录，如：/data/wwwroot
                 DocumentRoot: String
+                // Node应用业务模块
+                NodeModules: {
+                    // 业务模块部署根目录
+                    root: String
+                    // 业务模块别名，用于软链 
+                    // ln -s ${NodeModules.root} ${NODE_SERVER_ROOT}/app/${NodeModules.alias}
+                    alias: String
+                }
                 // 模板引擎，如：ejs
                 TemplateEngine: String
                 // 服务日志，未实现
@@ -59,9 +67,13 @@ module.exports = {
         VirtualHosts: [
             {
                 ServerAdmin: "zwlijun@qq.com",
-                ServerName: "localhost",
-                ServerAlias: "localhost",
+                ServerName: "localhost.seshenghuo.com",
+                ServerAlias: "localhost.seshenghuo.com",
                 DocumentRoot: "/data/wwwroot/seshenghuo/seshenghuo/htdocs",
+                NodeModules: {
+                    root: "/data/wwwroot/seshenghuo/seshenghuo/htdocs/NODE-INF",
+                    alias: "node.localhost.seshenghuo.com"
+                },
                 TemplateEngine: "ejs",
                 ServerLog: {
                     error: "",
@@ -80,6 +92,10 @@ module.exports = {
                 ServerName: "dev.third.com",
                 ServerAlias: "dev.third.com",
                 DocumentRoot: "/data/wwwroot/third",
+                NodeModules: {
+                    root: "/data/wwwroot/third/NODE-INF",
+                    alias: "node.dev.third.com"
+                },
                 TemplateEngine: "ejs",
                 ServerLog: {
                     error: "",

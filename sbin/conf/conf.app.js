@@ -16,13 +16,15 @@ const DEFAULT_VIRTUAL_HOST = "default";
  * 服务应用
  */
 class ServerApp{
-    constructor(){
+    constructor(context){
         var koa = this.koa = KOA();
 
         koa.use(KOACompress({
             threshold: 64,
             flush: ZLib.Z_SYNC_FLUSH
         }));
+
+        this.AppContext = context;
     }
 
     get server(){
@@ -57,7 +59,7 @@ class ServerApp{
             console.error("    The virtual host not found.");
             process.exit(1);
         }else{
-            const vsa = new VirtualHost(vhost, this.koa);
+            const vsa = new VirtualHost(vhost, this.koa, this.AppContext);
 
             vsa.load();
 
