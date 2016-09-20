@@ -34,10 +34,13 @@ class VirtualHost{
     }
 
     loadLogicModules(path){
+        console.log(">>>>>>>>>>>>LOGIC MODULE DEAL[S]<<<<<<<<<<<<");
         try{
             require(path);
+            console.log(">>>>>>>>>>>>LOGIC MODULE DEAL[E]<<<<<<<<<<<<");
             console.log("    Load `NODE-INF` success. module = " + path);
         }catch(e){
+            console.log(">>>>>>>>>>>>LOGIC MODULE DEAL[E]<<<<<<<<<<<<");
             console.log("    Load `NODE-INF` failed. message = " + e.message);
             // this.loadLogicModules(path);
         }
