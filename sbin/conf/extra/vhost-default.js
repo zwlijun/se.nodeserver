@@ -1,11 +1,7 @@
 "use strict";
 
 const KOA              = require("koa");
-const KOAVHost         = require("koa-vhost");
 const KOACompress      = require("koa-compress");
-const KOAMount         = require("koa-mount");
-const KOARouter        = require("koa-router");
-const KOARewrite       = require("koa-rewrite");
 const KOAStatic        = require("koa-static");
 const KOAViews         = require("koa-views");
 
@@ -18,7 +14,7 @@ class VirtualHost{
         this.vhost = vhostConf;
         this.serverKOA = ServerKOA;
         this.AppContext = AppContext;
-        this.virtualKOA = KOA();
+        this.virtualKOA = new KOA();
     }
 
     get server(){
@@ -36,12 +32,12 @@ class VirtualHost{
     loadLogicModules(path){
         console.log(">>>>>>>>>>>>LOGIC MODULE DEAL[S]<<<<<<<<<<<<");
         try{
-            require(path);
+            require(path).mount(this.server);
             console.log(">>>>>>>>>>>>LOGIC MODULE DEAL[E]<<<<<<<<<<<<");
             console.log("    Load `NODE-INF` success. module = " + path);
         }catch(e){
             console.log(">>>>>>>>>>>>LOGIC MODULE DEAL[E]<<<<<<<<<<<<");
-            console.log("    Load `NODE-INF` failed. message = " + e.message);
+            console.log("    Load `NODE-INF` failed. module = " + path + "; message = " + e.message);
             // this.loadLogicModules(path);
         }
     }
@@ -54,43 +50,43 @@ class VirtualHost{
         let nms = vhost.NodeModules;
 
         let docRoot = Path.resolve(vhost.DocumentRoot);
-        //设置静态文件
-        vkoa.use(KOAStatic(docRoot, {
-            maxage: staticServer.maxage || 0,
-            hidden: staticServer.hidden || false,
-            index: staticServer.index || "index.html",
-            defer: staticServer.defer || false,
-            gzip: staticServer.gzip || true
-        }));
+        let tplRoot = Path.resolve(vhost.NodeTemplateRoot);
+
+        console.log("******************************************");
+        console.log("VirtualHost DocumentRoot: " + docRoot);
+        console.log("VirtualHost NodeTemplateRoot: " + tplRoot);
+        console.log("******************************************");
 
         //装载业务的Node模块
         spawn("rm", ["-rf", this.dir(context.nms) + nms.alias]);
         spawn("ln", ["-s", nms.root, this.dir(context.nms) + nms.alias]);
 
         //设置压缩
-        vkoa.use(KOACompress({
+        let compress = KOACompress({
             threshold: 64,
             flush: ZLib.Z_SYNC_FLUSH
+        });
+        vkoa.use(compress);
+
+        //设置静态文件
+        vkoa.use(new KOAStatic(docRoot, {
+            maxage: staticServer.maxage || 0,
+            hidden: true === staticServer.hidden,
+            index:  staticServer.index || "index.html",
+            defer:  true === staticServer.defer,
+            gzip:   false !== staticServer.gzip
         }));
 
         //设置设置模板
-        vkoa.use(KOAViews(docRoot), {
+        let views = KOAViews(tplRoot, {
             map: {
                 html: vhost.TemplateEngine
             }
         });
+        vkoa.use(views);
 
         //初始化业务Node模块脚本
         this.loadLogicModules(nms.alias);
-
-        //设置路由
-        // let Router = KOARouter();
-
-        // Router.get("/", function *(next){
-        //  this.body = "It's works!";
-        // });
-        // vkoa.use(KOAMount("/", Router.middleware()));
-
     }
 }
 

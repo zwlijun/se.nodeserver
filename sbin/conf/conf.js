@@ -17,8 +17,10 @@
                 ServerName: String
                 // 服务别名，如：domain.com
                 ServerAlias: String
-                // 站点根目录，如：/data/wwwroot
+                // 站点根目录，如：/data/wwwroot/htdocs
                 DocumentRoot: String
+                // 动态模板文件目录，如：如：/data/wwwroot/NODE-TEMPLATE
+                NodeTemplateRoot: String
                 // Node应用业务模块
                 NodeModules: {
                     // 业务模块部署根目录，如：/data/wwwroot/NODE-INF
@@ -70,31 +72,10 @@ module.exports = {
                 ServerName: "localhost.seshenghuo.com",
                 ServerAlias: "localhost.seshenghuo.com",
                 DocumentRoot: "/data/wwwroot/seshenghuo/seshenghuo/htdocs",
+                NodeTemplateRoot: "/data/wwwroot/seshenghuo/seshenghuo/NODE-TEMPLATE",
                 NodeModules: {
                     root: "/data/wwwroot/seshenghuo/seshenghuo/htdocs/NODE-INF",
                     alias: "node.localhost.seshenghuo.com"
-                },
-                TemplateEngine: "ejs",
-                ServerLog: {
-                    error: "",
-                    access: ""
-                },
-                StaticServer: {
-                    maxage: 15 * 60 * 1000, //15m
-                    hidden: false,
-                    index: "index.html",
-                    defer: false,
-                    gzip: true
-                }
-            },
-            {
-                ServerAdmin: "zwlijun@qq.com",
-                ServerName: "dev.third.com",
-                ServerAlias: "dev.third.com",
-                DocumentRoot: "/data/wwwroot/third",
-                NodeModules: {
-                    root: "/data/wwwroot/third/NODE-INF",
-                    alias: "node.dev.third.com"
                 },
                 TemplateEngine: "ejs",
                 ServerLog: {

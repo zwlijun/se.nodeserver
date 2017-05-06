@@ -1,7 +1,7 @@
 "use strict";
 
 const KOA              = require("koa");
-const KOAVHost         = require("koa-vhost");
+const KOAVHost         = require("koa-virtual-host");
 const KOACompress      = require("koa-compress");
 
 const Path             = require('path');
@@ -17,7 +17,7 @@ const DEFAULT_VIRTUAL_HOST = "default";
  */
 class ServerApp{
     constructor(context){
-        var koa = this.koa = KOA();
+        var koa = this.koa = new KOA();
 
         koa.use(KOACompress({
             threshold: 64,
@@ -86,7 +86,7 @@ class ServerApp{
             }
 
             this.koa.listen(_listen, function(){
-                console.log("server listen on port: " + listen);
+                console.log("server listen on port: " + _listen);
             });
         }
     }

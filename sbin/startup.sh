@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node660 --preserve-symlinks server.js
+node710 --preserve-symlinks server.js

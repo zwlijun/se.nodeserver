@@ -1,5 +1,5 @@
 # SE.NodeServer
-基于NodeJS(6.x)和KOA(1.x)搭建的Web应用框架 
+基于NodeJS(7.6.0+)和KOA2搭建的Web应用框架 
 
 # 目录结构
 + nodeserver
@@ -12,6 +12,7 @@
     + koa-static
     + koa-vhost
     + koa-views
+    + ....
   + sbin  应用目录，启动和配置虚拟主机
     + conf  配置目录
       + extra 虚拟主机配置及实现
@@ -39,8 +40,10 @@
                 ServerName: String
                 // 服务别名，如：domain.com
                 ServerAlias: String
-                // 站点根目录，如：/data/wwwroot
+                // 站点根目录，如：/data/wwwroot/htdocs
                 DocumentRoot: String
+                // 动态模板文件目录，如：如：/data/wwwroot/NODE-TEMPLATE
+                NodeTemplateRoot: String
                 // Node应用业务模块
                 NodeModules: {
                     // 业务模块部署根目录，如：/data/wwwroot/NODE-INF
