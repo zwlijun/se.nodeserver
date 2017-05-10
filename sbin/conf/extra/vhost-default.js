@@ -4,6 +4,7 @@ const KOA              = require("koa");
 const KOACompress      = require("koa-compress");
 const KOAStatic        = require("koa-static");
 const KOAViews         = require("koa-views");
+const KOABody          = require("koa-body");
 
 const Path             = require('path');
 const ZLib             = require('zlib');
@@ -38,6 +39,7 @@ class VirtualHost{
         }catch(e){
             console.log(">>>>>>>>>>>>LOGIC MODULE DEAL[E]<<<<<<<<<<<<");
             console.log("    Load `NODE-INF` failed. module = " + path + "; message = " + e.message);
+            console.error(e);
             // this.loadLogicModules(path);
         }
     }
@@ -61,6 +63,9 @@ class VirtualHost{
         spawn("rm", ["-rf", this.dir(context.nms) + nms.alias]);
         spawn("ln", ["-s", nms.root, this.dir(context.nms) + nms.alias]);
 
+        //设置Body
+        vkoa.use(new KOABody());
+
         //设置压缩
         let compress = KOACompress({
             threshold: 64,
@@ -80,7 +85,8 @@ class VirtualHost{
         //设置设置模板
         let views = KOAViews(tplRoot, {
             map: {
-                html: vhost.TemplateEngine
+                html: vhost.TemplateEngine,
+                json: vhost.TemplateEngine
             }
         });
         vkoa.use(views);
